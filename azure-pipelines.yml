@@ -32,3 +32,6 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'Publish Output'
+
+- script: '%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe'
+  displayName: "Test if vswhere is present."
