@@ -15,6 +15,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: BatchScript@1
+  inputs:
+    filename: 'C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat'
+    arguments: '-arch=amd64'
+    modifyEnvironment: true
+  displayName: "Initialize Visual Studio Environment"
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -28,10 +35,9 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- script: 'msbuild $(solution) /t:Build /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'Publish Output'
-
-- script: '"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"'
-  displayName: "Test if vswhere is present."
